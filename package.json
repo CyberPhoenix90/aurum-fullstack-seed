@@ -4,6 +4,7 @@
     "description": "",
     "private": true,
     "scripts": {
+        "postinstall": "cd server;npm install",
         "build": "webpack --config webpack.prod.js && cd server; tsc",
         "watchclient": "webpack --config webpack.prod.js -w",
         "watchserver": "cd ./server; tsc -w",

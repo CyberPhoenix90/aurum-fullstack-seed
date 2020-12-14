@@ -2,9 +2,6 @@ import { Aurum } from 'aurumjs';
 import * as stylesheet from '../../less/backend.less';
 import * as aurumImg from '../../src/images/aurum.png';
 
-console.log(`Stylesheet:` + stylesheet);
-console.log(`Image:` + aurumImg);
-
 export function SSR() {
     return (
         <html>

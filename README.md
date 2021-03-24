@@ -17,7 +17,7 @@ Npm scripts:
 | npm run host        | Hosts the site                                           |
 
 You can customize the webpack config to swap out or change technologies. The CSS Loader supports LESS so you can import LESS or CSS right from your code
-This setup supports server side rendering, reactive database, real time stream synchronization between backend and client and front end powered by aurum.js.
+This setup supports server side rendering, reactive database, real time stream synchronization between backend and front end powered by aurum.js.
 
 This is ideal for real time single page applications
 

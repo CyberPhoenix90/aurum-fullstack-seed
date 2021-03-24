@@ -1,25 +1,43 @@
-import { ArrayDataSource, Aurum, DataSource, DuplexDataSource } from 'aurumjs';
+import {
+    ArrayDataSource,
+    Aurum,
+    CancellationToken,
+    DataSource,
+    DuplexDataSource,
+} from 'aurumjs';
 import '../less/frontend.less';
 
-const users = DataSource.fromRemoteSource<number>({
-    host: location.host,
-    id: 'users',
-});
+const users = DataSource.fromRemoteSource<number>(
+    {
+        host: location.host,
+        id: 'users',
+    },
+    new CancellationToken()
+);
 
-const clicks = DuplexDataSource.fromRemoteSource<number>({
-    host: location.host,
-    id: 'clicks',
-});
+const clicks = DuplexDataSource.fromRemoteSource<number>(
+    {
+        host: location.host,
+        id: 'clicks',
+    },
+    new CancellationToken()
+);
 
-const persistentClicks = DataSource.fromRemoteSource<number>({
-    host: location.host,
-    id: 'persistentClicks',
-});
+const persistentClicks = DataSource.fromRemoteSource<number>(
+    {
+        host: location.host,
+        id: 'persistentClicks',
+    },
+    new CancellationToken()
+);
 
-const chat = ArrayDataSource.fromRemoteSource<string>({
-    host: location.host,
-    id: 'chat',
-});
+const chat = ArrayDataSource.fromRemoteSource<string>(
+    {
+        host: location.host,
+        id: 'chat',
+    },
+    new CancellationToken()
+);
 
 const msg = new DataSource('');
 

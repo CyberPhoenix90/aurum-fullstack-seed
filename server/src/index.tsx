@@ -7,13 +7,14 @@ import {
     DataSource,
     DuplexDataSource,
 } from 'aurumjs';
-import * as compression from 'compression';
+import * as bodyParser from 'body-parser';
 import * as express from 'express';
+import { createReadStream } from 'fs';
 import { createServer } from 'http';
 import { join } from 'path';
+import { createGzip } from 'zlib';
 import './extensions';
 import { SSR } from './ssr';
-import * as bodyParser from 'body-parser';
 
 async function start() {
     const server = createServer();
@@ -21,14 +22,14 @@ async function start() {
         path: 'db',
     });
 
-    const index = await db.createOrGetIndex('statistics');
+    const index = await db.createOrGetIndex<number>('statistics');
     const chatlog = await db.createOrGetOrderedCollection('chatlog', 'utf8');
 
     if (!(await index.has('clicks'))) {
         index.set('clicks', 0, 'json');
     }
 
-    const allTimeClicks = await index.observeKey<number>(
+    const allTimeClicks = await index.observeKey(
         'clicks',
         new CancellationToken(),
         'json'
@@ -54,9 +55,7 @@ async function start() {
     clicksSinceLaunch.listen(() =>
         index.set('clicks', allTimeClicks.value + 1, 'json')
     );
-
     const app = express();
-    app.use(compression());
     app.use(bodyParser.json());
 
     server.on('request', app);
@@ -78,7 +77,13 @@ async function start() {
 
     app.get('/static/*', async (req, res) => {
         const path = join(__dirname, '../../dist', req.url);
-        res.sendFile(path);
+        if (req.url.endsWith('bundle.js')) {
+            res.setHeader('Content-Encoding', 'br');
+            res.sendFile(path + '.br');
+        } else {
+            res.setHeader('Content-Encoding', 'gzip');
+            createReadStream(path).pipe(createGzip()).pipe(res);
+        }
     });
 
     server.listen(3000, () => {
